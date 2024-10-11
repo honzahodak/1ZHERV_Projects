@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Did we start the game?
     /// </summary>
-    private static bool sGameStarted = false;
+   // private static bool sGameStarted = false;
     
     /// <summary>
     /// Singleton instance of the GameManager.
@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // Reload the scene as started.
-        sGameStarted = true; 
+        //sGameStarted = true; 
         ResetGame();
     }
     

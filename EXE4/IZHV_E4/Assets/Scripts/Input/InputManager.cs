@@ -30,7 +30,7 @@ public class InputManager : MonoBehaviour
 	{
 		if(cursorInputForLook)
 		{
-			LookInput(value.Get<Vector2>());
+			LookInput(value.Get<Vector2>() /2);
 		}
 	}
 
