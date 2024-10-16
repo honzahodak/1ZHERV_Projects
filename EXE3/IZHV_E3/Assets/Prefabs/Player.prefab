@@ -534,6 +534,7 @@ MonoBehaviour:
   invincible: 0
   damageDelay: 0.5
   speed: 10
+  playerSpriteRenderer: {fileID: 1204133200440067147}
 --- !u!114 &1204133201242880331
 MonoBehaviour:
   m_ObjectHideFlags: 0

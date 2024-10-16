@@ -143,6 +143,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private int mPlayerIndex;
 
+    public SpriteRenderer playerSpriteRenderer;
+
     /// <summary>
     /// Called when the script instance is first loaded.
     /// </summary>

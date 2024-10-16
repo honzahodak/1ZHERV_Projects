@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.InputSystem;
@@ -102,6 +101,7 @@ public class Settings : MonoBehaviour
     /// Singleton instance of the Settings.
     /// </summary>
     private static Settings sInstance;
+    [SerializeField] private GameObject[] aditionalSpawners;
     
     /// <summary>
     /// Getter for the singleton Settings object.
@@ -124,14 +124,21 @@ public class Settings : MonoBehaviour
      */
     public void OnPlayerJoined(PlayerInput playerInput)
     {
-        AddPlayer(playerInput.gameObject);
-        //print(playerInput.gameObject.name);
+        if (GameManager.Instance.mGameLost)
+        {
+            Destroy(playerInput.gameObject);
+        }
+        else
+        {
+            AddPlayer(playerInput.gameObject);
+            print("Playerjoinedweeeeeeeeeeee");
+
+        }
     }
 
     public void OnPlayerLeft(PlayerInput playerInput)
     {
         RemovePlayer(playerInput.gameObject);
-
     }
     /// <summary>
     /// Called when the script instance is first loaded.
@@ -169,6 +176,13 @@ public class Settings : MonoBehaviour
         }
         
         mGameManager?.UpdatePlayers();
+        if (players.Count > 1)
+        {
+            foreach (var go in aditionalSpawners)
+            {
+                go.SetActive(true);
+            }
+        }
         return playerIndex;
     }
     
@@ -189,6 +203,13 @@ public class Settings : MonoBehaviour
     {
         players.RemoveAll(x => x == player);
         mGameManager?.UpdatePlayers();
+        if (players.Count == 1)
+        {
+            foreach (var go in aditionalSpawners)
+            {
+                go.SetActive(false);
+            }
+        }
     }
 
     /// <summary>

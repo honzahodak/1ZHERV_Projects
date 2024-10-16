@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Is the game lost?
     /// </summary>
-    private bool mGameLost = false;
+    public bool mGameLost = false;
 
     /// <summary>
     /// Did we start the game?
@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     /// List of player which are currently alive.
     /// </summary>
     private List<GameObject> mLivingPlayers = new List<GameObject>();
+
+    [SerializeField] private GameObject lostText; 
 
     /// <summary>
     /// Singleton instance of the GameManager.
@@ -72,17 +74,22 @@ public class GameManager : MonoBehaviour
             
             if (!player.IsAlive())
             {
-                mLivingPlayers.RemoveAt(iii);
                 if (!player.primaryPlayer)
-                { // Only kill non-primary players.
+                {
+                    mLivingPlayers.RemoveAt(iii);
                     // Update the UI.
                     var playerUI = Settings.Instance.PlayerUI(player.playerIndex);
                     playerUI?.GetComponent<HealthUI>()?.SetVisible(false);
-                    
+                
                     // Update the state.
                     Settings.Instance.RemovePlayer(playerGO);
                     Destroy(player.gameObject);
                 }
+                else
+                {
+                    player.playerSpriteRenderer.enabled = false;
+                }
+                    LooseGame();
             }
         }
         
@@ -115,7 +122,9 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // Reload the scene as started.
-        sGameStarted = true; 
+        lostText.SetActive(false);
+        sGameStarted = true;
+        Time.timeScale = 1.0f;
         ResetGame();
     }
     
@@ -133,8 +142,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LooseGame()
     {
-        // Loose the game.
         mGameLost = true;
+        lostText.SetActive(true);
+        Time.timeScale = 0.0f;
     }
 
     /// <summary>

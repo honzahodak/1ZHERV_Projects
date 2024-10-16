@@ -187,7 +187,7 @@ public class Character2DMovement : MonoBehaviour
     /// </summary>
     void AnimateCharacter()
     {
-	    /*
+		/*
 	     * Task #1a: Orienting the character
 	     *
 	     * Let us start by at least orienting the character, making him face the
@@ -212,8 +212,20 @@ public class Character2DMovement : MonoBehaviour
 	     *   * Persistent heading flag: *mHeadingRight*
 	     *   * Rotating a local rotation by an axis: localRotation *= Quaternion.Euler(...)
 	     */
-	    
-	    var animator = mSelector.charAnimator;
+
+		if (mInput.move.x < 0f)
+		{
+			mHeadingRight = false;
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+		else
+		{
+			mHeadingRight = true;
+            transform.localScale = new Vector3(1, 1, 1);
+
+        }
+
+        var animator = mSelector.charAnimator;
 	    if (animator != null)
 	    {
 			var currentVerticalSpeed = mController.velocity.y;
@@ -227,44 +239,81 @@ public class Character2DMovement : MonoBehaviour
 			var jump = mInput.jump;
 			var falling = !mController.isGrounded && mFallTimeoutDelta <= 0.0f;
 
-			/*
-			 * Task #1a: Passing properties to the Animator
-			 * 
-			 * After rotating the character, he should now be able to look in the
-			 * correct direction, based on the movement. However, more detailed
-			 * animations are still missing.
-			 *
-			 * To fix this, you will need to pass the current state of the character
-			 * to the Animator. Each Animator in Unity has several properties which
-			 * can be programmatically set during runtime. These properties can be
-			 * used to drive the animation from this gameplay code.
-			 * 
-			 * In our case, we have following common properties:
-			 *   1) Speed (float) : Current movement speed of the character.
-			 *   2) MoveSpeed (float) : Target movement animation speed.
-			 *   3) Jump (bool) : Is the character jumping?
-			 *   4) Grounded (bool) : Is the character currently on the ground?
-			 *   5) Fall (bool) : Is the character falling?
-			 *   6) Crouch (bool) Is the character crouching?
-			 * These properties can be found in ani of the animation controllers
-			 * in the top-left "Parameters" tab.
-			 *
-			 * When you start the game and try performing any of the actions,
-			 * such as walking (WASD), jumping (<SPACE>), or crouching (<CTRL>),
-			 * the corresponding animation is not played.
-			 *
-			 * To fix this, we need to actually set the animator properties using
-			 * its methods. This way, the gameplay code triggers the corresponding
-			 * states within the Animator state machine.
-			 * 
-			 * The correct property values have been prepared above. After setting
-			 * the values, all of the animations should play correctly.
-			 *
-			 * Helpful variables and methods:
-			 *   * Property values prepared above
-			 *   * Current Animator instance: *animator*
-			 *   * Animator methods: *SetFloat* and *SetBool*
-			 */
+			if (crouch) 
+			{
+				animator.SetBool("Crouch", true);
+			}
+			else
+			{
+                animator.SetBool("Crouch", false);
+            }
+			if (grounded)
+			{
+				animator.SetBool("Grounded", true);
+			}
+			else
+			{
+                animator.SetBool("Grounded", false);
+            }
+            if (jump)
+			{
+				animator.SetBool("Jump", true);
+			}
+			else
+			{
+                animator.SetBool("Jump", false);
+            }
+            if (falling)
+            {
+                animator.SetBool("Fall", true);
+            }
+            else
+            {
+                animator.SetBool("Fall", false);
+            }
+			animator.SetFloat("Speed",speed);
+			animator.SetFloat("MoveSpeed",moveSpeed);
+
+
+
+            /*
+             * Task #1a: Passing properties to the Animator
+             * 
+             * After rotating the character, he should now be able to look in the
+             * correct direction, based on the movement. However, more detailed
+             * animations are still missing.
+             *
+             * To fix this, you will need to pass the current state of the character
+             * to the Animator. Each Animator in Unity has several properties which
+             * can be programmatically set during runtime. These properties can be
+             * used to drive the animation from this gameplay code.
+             * 
+             * In our case, we have following common properties:
+             *   1) Speed (float) : Current movement speed of the character.
+             *   2) MoveSpeed (float) : Target movement animation speed.
+             *   3) Jump (bool) : Is the character jumping?
+             *   4) Grounded (bool) : Is the character currently on the ground?
+             *   5) Fall (bool) : Is the character falling?
+             *   6) Crouch (bool) Is the character crouching?
+             * These properties can be found in ani of the animation controllers
+             * in the top-left "Parameters" tab.
+             *
+             * When you start the game and try performing any of the actions,
+             * such as walking (WASD), jumping (<SPACE>), or crouching (<CTRL>),
+             * the corresponding animation is not played.
+             *
+             * To fix this, we need to actually set the animator properties using
+             * its methods. This way, the gameplay code triggers the corresponding
+             * states within the Animator state machine.
+             * 
+             * The correct property values have been prepared above. After setting
+             * the values, all of the animations should play correctly.
+             *
+             * Helpful variables and methods:
+             *   * Property values prepared above
+             *   * Current Animator instance: *animator*
+             *   * Animator methods: *SetFloat* and *SetBool*
+             */
 	    }
     }
 }
